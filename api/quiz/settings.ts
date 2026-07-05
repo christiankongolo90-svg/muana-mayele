@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       schedule: access.schedule,
     });
   } catch (err: any) {
-    console.error('Quiz settings error:', err.message);
-    return errorResponse(res, 'Failed to fetch quiz settings', 500);
+    console.error('Quiz settings error:', err.message, err.stack);
+    return errorResponse(res, 'Failed to fetch quiz settings: ' + err.message, 500);
   }
 }
