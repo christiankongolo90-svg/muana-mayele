@@ -1,0 +1,203 @@
+<header class="header">
+  <div class="container">
+    <nav class="nav">
+      <a routerLink="/" class="logo" (click)="goHome()">
+        @if (c.get('header', 'logo_image', '')) {
+          <img [src]="c.getImageUrl('header', 'logo_image', '')" alt="Logo" class="logo__img"
+            [style.height]="c.get('header', 'logo_image_height', '')" />
+        } @else {
+          <span class="logo__icon">{{ c.get('header', 'logo_icon', '🌿') }}</span>
+        }
+        <span class="logo__text">{{ c.get('header', 'site_name', 'Muana Mayèlé') }}</span>
+      </a>
+
+      <button
+        class="nav__toggle"
+        (click)="toggleMenu()"
+        [class.active]="isMenuOpen"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-label="Toggle navigation menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav__backdrop" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+
+      <ul class="nav__menu" [class.active]="isMenuOpen">
+        <li><a routerLink="/" class="nav__link" (click)="goHome()">Accueil</a></li>
+        <li><a href="#classement" class="nav__link" (click)="closeMenu()">Classement</a></li>
+        <li><a href="#regles" class="nav__link" (click)="closeMenu()">Règles</a></li>
+
+        @if (currentUser) {
+          <!-- Logged in user menu -->
+          <li class="user-menu">
+            <button class="user-menu__trigger" (click)="toggleUserDropdown()">
+              <span class="user-menu__avatar">👤</span>
+              <span class="user-menu__name">{{ currentUser.full_name.split(' ')[0] }}</span>
+              <span class="user-menu__arrow" [class.open]="showUserDropdown()">▼</span>
+            </button>
+
+            @if (showUserDropdown()) {
+              <div class="user-menu__dropdown">
+                <div class="user-menu__header">
+                  <span class="user-menu__fullname">{{ currentUser.full_name }}</span>
+                  <span class="user-menu__phone">{{ currentUser.country_code }} {{ currentUser.phone }}</span>
+                </div>
+                <div class="user-menu__divider"></div>
+                <button class="user-menu__item" (click)="goToProfile()">
+                  <span class="user-menu__icon">📊</span>
+                  Mon Profil
+                </button>
+                <button class="user-menu__item" (click)="goToQuiz()">
+                  <span class="user-menu__icon">🎮</span>
+                  Jouer au Quiz
+                </button>
+                @if (currentUser.role === 'admin') {
+                  <button class="user-menu__item" (click)="goToAdmin()">
+                    <span class="user-menu__icon">⚙️</span>
+                    Administration
+                  </button>
+                }
+                <div class="user-menu__divider"></div>
+                <button class="user-menu__item user-menu__item--logout" (click)="logout()">
+                  <span class="user-menu__icon">🚪</span>
+                  Déconnexion
+                </button>
+              </div>
+            }
+          </li>
+        } @else {
+          <!-- Not logged in -->
+          <li>
+            <button class="btn btn--outline nav__login" (click)="openLoginModal(); closeMenu()">
+              Se connecter
+            </button>
+          </li>
+          <li>
+            <a href="#inscription" class="btn btn--primary nav__cta" (click)="closeMenu()">
+              S'inscrire
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Login Modal -->
+@if (showLoginModal()) {
+  <div class="modal-overlay" (click)="closeLoginModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal__close" (click)="closeLoginModal()">×</button>
+
+      @if (loginStep() === 'phone') {
+        <!-- Step 1: Phone Number -->
+        <div class="modal__header">
+          <h2 class="modal__title">Connexion</h2>
+          <p class="modal__subtitle">Entrez votre numéro pour recevoir un code par WhatsApp</p>
+        </div>
+
+        <form class="modal__form" (ngSubmit)="sendLoginCode()">
+          <div class="form-group">
+            <label for="loginPhone">Téléphone</label>
+            <div class="phone-input">
+              <select
+                [(ngModel)]="loginData.countryCode"
+                name="countryCode"
+                class="country-select"
+              >
+                @for (country of countries; track country.code) {
+                  <option [value]="country.code">
+                    {{ country.flag }} {{ country.code }}
+                  </option>
+                }
+              </select>
+              <input
+                type="tel"
+                id="loginPhone"
+                [(ngModel)]="loginData.phone"
+                name="phone"
+                placeholder="Numéro de téléphone"
+                required
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="error-message">{{ errorMessage() }}</div>
+          }
+
+          <button type="submit" class="btn btn--primary btn--full" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <span class="spinner"></span> Envoi...
+            } @else {
+              Recevoir le code
+            }
+          </button>
+        </form>
+
+        <div class="modal__footer">
+          <p>Pas encore inscrit ? <a href="#inscription" (click)="closeLoginModal()">S'inscrire</a></p>
+        </div>
+      } @else {
+        <!-- Step 2: Passcode Verification -->
+        <div class="modal__header">
+          <h2 class="modal__title">Vérification</h2>
+          <p class="modal__subtitle">
+            Code envoyé au {{ selectedCountry?.flag }} {{ loginData.countryCode }} {{ loginData.phone }}
+          </p>
+        </div>
+
+        <form class="modal__form" (ngSubmit)="verifyLoginCode()">
+          <div class="form-group">
+            <label for="passcode">Code de vérification</label>
+            <input
+              type="text"
+              id="passcode"
+              [value]="loginData.passcode"
+              (input)="onPasscodeInput($event)"
+              name="passcode"
+              placeholder="000000"
+              class="passcode-input"
+              maxlength="6"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+            />
+          </div>
+
+
+          @if (countdown() > 0) {
+            <p class="countdown">Expire dans: <strong>{{ formatCountdown() }}</strong></p>
+          } @else {
+            <p class="countdown expired">Code expiré</p>
+          }
+
+          @if (successMessage()) {
+            <div class="success-message">{{ successMessage() }}</div>
+          }
+
+          @if (errorMessage()) {
+            <div class="error-message">{{ errorMessage() }}</div>
+          }
+
+          <button type="submit" class="btn btn--primary btn--full" [disabled]="isLoading() || loginData.passcode.length !== 6">
+            @if (isLoading()) {
+              <span class="spinner"></span> Vérification...
+            } @else {
+              Vérifier et continuer
+            }
+          </button>
+        </form>
+
+        <div class="modal__footer">
+          <button type="button" class="btn-link" (click)="goBackToPhone()">
+            ← Modifier le numéro
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}

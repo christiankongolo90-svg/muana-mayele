@@ -1,0 +1,282 @@
+$primary-blue: #003893;
+$primary-blue-dark: #002d75;
+$gold: #FFB800;
+$gold-dark: #E5A600;
+$gold-light: #FFF3D0;
+$white: #ffffff;
+$text-dark: #1a1a2e;
+
+.leaderboard {
+  padding: 30px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.99), rgba(248,249,255,0.97));
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.container {
+  max-width: 100%;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $primary-blue;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: $gold;
+    border-radius: 50%;
+  }
+
+  .live-badge {
+    font-size: 0.6rem;
+    background: #dc2626;
+    color: $white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+}
+
+.leaderboard__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, rgba($white, 0.9), rgba($white, 0.6));
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+
+  &:hover {
+    transform: translateX(4px);
+    border-color: rgba($gold, 0.3);
+  }
+
+  &--top {
+    background: linear-gradient(135deg, rgba($gold-light, 0.6), rgba($gold, 0.2));
+    border: 2px solid $gold;
+
+    &:hover {
+      border-color: $gold;
+    }
+  }
+
+  &--current {
+    background: linear-gradient(135deg, rgba($primary-blue, 0.08), rgba($primary-blue, 0.03));
+    border: 2px solid rgba($primary-blue, 0.3);
+
+    .player__name {
+      color: $primary-blue;
+    }
+  }
+
+  &--medal {
+    .player__name {
+      font-weight: 600;
+    }
+  }
+}
+
+.player__rank {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.medal {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.rank-number {
+  width: 28px;
+  height: 28px;
+  background-color: $primary-blue;
+  color: $white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.player__avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: linear-gradient(135deg, rgba($primary-blue, 0.1), rgba($primary-blue, 0.05));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.player__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player__name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: $text-dark;
+  display: block;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player__stars {
+  display: flex;
+  gap: 1px;
+
+  .star {
+    font-size: 0.6rem;
+  }
+}
+
+.player__points {
+  text-align: right;
+  min-width: 65px;
+}
+
+.points-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $gold-dark;
+  display: block;
+}
+
+.points-label {
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.player__meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.player__time {
+  font-size: 0.7rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.you-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  background: $primary-blue;
+  color: $white;
+  padding: 1px 6px;
+  border-radius: 8px;
+  margin-left: 6px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.leaderboard__empty {
+  text-align: center;
+  padding: 24px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+// Mobile
+@media (max-width: 576px) {
+  .leaderboard {
+    padding: 25px 20px;
+    border-radius: 20px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+  }
+
+  .player {
+    padding: 10px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .player__avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 1.1rem;
+  }
+
+  .player__name {
+    font-size: 0.9rem;
+  }
+
+  .points-value {
+    font-size: 0.9rem;
+  }
+
+  .player__points {
+    min-width: 55px;
+  }
+
+  .medal {
+    font-size: 1.2rem;
+  }
+}
+
+// Small phones
+@media (max-width: 380px) {
+  .leaderboard {
+    padding: 20px 16px;
+  }
+
+  .player {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .player__rank {
+    width: 28px;
+    min-width: 28px;
+  }
+
+  .player__avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    font-size: 1rem;
+  }
+}

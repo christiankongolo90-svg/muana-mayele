@@ -1,0 +1,161 @@
+<div class="results-page">
+  @if (results) {
+    <!-- Header -->
+    <header class="results-header">
+      <div class="results-header__logo">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-text">Muana Mayèlé</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="results-content">
+      <!-- Score Card -->
+      <div class="score-card">
+        <div class="score-card__trophy">
+          @if (results.percentage >= 75) {
+            <span class="trophy trophy--gold">🏆</span>
+          } @else if (results.percentage >= 50) {
+            <span class="trophy trophy--silver">🥈</span>
+          } @else {
+            <span class="trophy trophy--bronze">🥉</span>
+          }
+        </div>
+
+        <h1 class="score-card__title">Quiz Terminé !</h1>
+
+        <div class="score-card__grade" [class]="'score-card__grade--' + gradeClass">
+          {{ grade }}
+        </div>
+
+        <div class="score-card__circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="circle-bg" cx="50" cy="50" r="45"/>
+            <circle
+              class="circle-progress"
+              cx="50" cy="50" r="45"
+              [style.strokeDashoffset]="283 - (283 * results.percentage / 100)"
+            />
+          </svg>
+          <div class="circle-content">
+            <span class="circle-percentage">{{ results.percentage }}%</span>
+            <span class="circle-label">Score</span>
+          </div>
+        </div>
+
+        <div class="score-card__points">
+          <span class="points-icon">⭐</span>
+          <span class="points-value">{{ results.totalPoints }}</span>
+          <span class="points-label">Points</span>
+        </div>
+
+        <!-- Rank Badge -->
+        @if (userRank()) {
+          <div class="rank-badge">
+            <span class="rank-badge__position">{{ userRank() }}{{ userRank() === 1 ? 'er' : 'e' }}</span>
+            <span class="rank-badge__label">sur {{ totalParticipants() }} participants</span>
+          </div>
+        }
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat stat--correct">
+            <span class="stat__icon">✓</span>
+            <span class="stat__value">{{ results.correctAnswers }}</span>
+            <span class="stat__label">Correctes</span>
+          </div>
+          <div class="stat stat--wrong">
+            <span class="stat__icon">✗</span>
+            <span class="stat__value">{{ results.wrongAnswers }}</span>
+            <span class="stat__label">Incorrectes</span>
+          </div>
+          <div class="stat stat--time">
+            <span class="stat__icon">⏱</span>
+            <span class="stat__value">{{ formatTime(results.timeTaken) }}</span>
+            <span class="stat__label">Temps</span>
+          </div>
+          <div class="stat stat--total">
+            <span class="stat__icon">📝</span>
+            <span class="stat__value">{{ results.totalQuestions }}</span>
+            <span class="stat__label">Questions</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+          <button class="btn btn--primary" (click)="playAgain()">
+            <span class="btn__icon">🔄</span>
+            Rejouer
+          </button>
+          <button class="btn btn--secondary" (click)="goHome()">
+            <span class="btn__icon">🏠</span>
+            Accueil
+          </button>
+        </div>
+      </div>
+
+      <!-- Answers Review -->
+      <div class="review-section">
+        <h2 class="review-title">
+          <span class="review-title__icon">📋</span>
+          Révision des réponses
+        </h2>
+
+        <div class="review-list">
+          @for (question of results.questions; track question.id; let i = $index) {
+            <div
+              class="review-item"
+              [class.review-item--correct]="results.answers[i] === question.correctAnswer"
+              [class.review-item--wrong]="results.answers[i] !== null && results.answers[i] !== question.correctAnswer"
+              [class.review-item--skipped]="results.answers[i] === null"
+            >
+              <div class="review-item__header">
+                <span class="review-item__number">Q{{ i + 1 }}</span>
+                <span class="review-item__category">{{ question.category }}</span>
+                @if (results.answers[i] === question.correctAnswer) {
+                  <span class="review-item__status review-item__status--correct">✓ Correct</span>
+                } @else if (results.answers[i] === null) {
+                  <span class="review-item__status review-item__status--skipped">- Non répondu</span>
+                } @else {
+                  <span class="review-item__status review-item__status--wrong">✗ Incorrect</span>
+                }
+              </div>
+
+              <p class="review-item__question">{{ question.question }}</p>
+
+              <div class="review-item__answers">
+                @for (option of question.options; track $index; let j = $index) {
+                  <div
+                    class="review-answer"
+                    [class.review-answer--correct]="j === question.correctAnswer"
+                    [class.review-answer--user-wrong]="results.answers[i] === j && j !== question.correctAnswer"
+                  >
+                    <span class="review-answer__letter">{{ getOptionLetter(j) }}</span>
+                    <span class="review-answer__text">{{ option }}</span>
+                    @if (j === question.correctAnswer) {
+                      <span class="review-answer__icon">✓</span>
+                    }
+                    @if (results.answers[i] === j && j !== question.correctAnswer) {
+                      <span class="review-answer__icon review-answer__icon--wrong">✗</span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </main>
+
+    <!-- Decorations -->
+    <div class="decorations">
+      @if (results.percentage >= 75) {
+        <span class="confetti confetti--1">🎉</span>
+        <span class="confetti confetti--2">🎊</span>
+        <span class="confetti confetti--3">✨</span>
+        <span class="confetti confetti--4">🌟</span>
+        <span class="confetti confetti--5">🎉</span>
+      }
+    </div>
+  }
+</div>

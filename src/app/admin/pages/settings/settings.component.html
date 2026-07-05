@@ -1,0 +1,227 @@
+<div class="settings-page">
+  <h2 class="page-heading">Parametres du Quiz</h2>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadSettings()">Reessayer</button>
+    </div>
+  } @else {
+    <!-- Success message -->
+    @if (successMessage()) {
+      <div class="success-message">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <div class="settings-grid">
+      <!-- Quiz Status Card -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h3>Statut du Quiz</h3>
+        </div>
+        <div class="card-body">
+          <p class="setting-description">
+            Controlez si les joueurs peuvent demarrer un nouveau quiz.
+            Quand le quiz est ferme, personne ne peut jouer.
+          </p>
+
+          <div class="status-toggle">
+            <div class="toggle-info">
+              <span class="status-label">Le quiz est actuellement :</span>
+              <span class="status-badge" [class.open]="isOpen" [class.closed]="!isOpen">
+                {{ isOpen ? 'OUVERT' : 'FERME' }}
+              </span>
+            </div>
+
+            <button
+              class="toggle-btn"
+              [class.toggle-on]="isOpen"
+              [class.toggle-off]="!isOpen"
+              (click)="toggleQuizStatus()"
+            >
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+
+          @if (!isOpen) {
+            <div class="warning-box">
+              Aucun joueur ne peut demarrer un quiz tant que le statut est ferme.
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Schedule Card -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h3>Programmation Horaire</h3>
+        </div>
+        <div class="card-body">
+          <p class="setting-description">
+            Programmez les jours et heures ou le quiz est accessible.
+            Quand la programmation est activee, le quiz n'est disponible que pendant les creneaux definis.
+          </p>
+
+          <div class="status-toggle">
+            <div class="toggle-info">
+              <span class="status-label">Programmation :</span>
+              <span class="status-badge" [class.open]="scheduleEnabled" [class.closed]="!scheduleEnabled">
+                {{ scheduleEnabled ? 'ACTIVEE' : 'DESACTIVEE' }}
+              </span>
+            </div>
+
+            <button
+              class="toggle-btn"
+              [class.toggle-on]="scheduleEnabled"
+              [class.toggle-off]="!scheduleEnabled"
+              (click)="toggleSchedule()"
+              [disabled]="!isOpen"
+            >
+              <span class="toggle-slider"></span>
+            </button>
+          </div>
+
+          @if (!isOpen) {
+            <div class="info-box">
+              Le quiz doit etre ouvert pour utiliser la programmation.
+            </div>
+          }
+
+          @if (scheduleEnabled && isOpen) {
+            <!-- Day Selection -->
+            <div class="schedule-section">
+              <label class="schedule-label">Jours de la semaine :</label>
+              <div class="day-selector">
+                @for (day of daysOfWeek; track day.value) {
+                  <button
+                    class="day-btn"
+                    [class.selected]="isDaySelected(day.value)"
+                    (click)="toggleDay(day.value)"
+                    [title]="day.label"
+                  >
+                    {{ day.shortLabel }}
+                  </button>
+                }
+              </div>
+              <div class="quick-select">
+                <button class="quick-btn" (click)="selectAllDays()">Tous les jours</button>
+                <button class="quick-btn" (click)="selectWeekdays()">Lun-Ven</button>
+                <button class="quick-btn" (click)="selectWeekend()">Week-end</button>
+                <button class="quick-btn" (click)="clearDays()">Effacer</button>
+              </div>
+            </div>
+
+            <!-- Time Selection -->
+            <div class="schedule-section">
+              <label class="schedule-label">Horaire :</label>
+              <div class="time-range">
+                <div class="time-field">
+                  <label for="startTime">Debut</label>
+                  <input type="time" id="startTime" [(ngModel)]="scheduleStartTime" class="schedule-time-input" />
+                </div>
+                <span class="time-separator">a</span>
+                <div class="time-field">
+                  <label for="endTime">Fin</label>
+                  <input type="time" id="endTime" [(ngModel)]="scheduleEndTime" class="schedule-time-input" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Timezone Selection -->
+            <div class="schedule-section">
+              <label class="schedule-label" for="timezone">Fuseau horaire :</label>
+              <select id="timezone" [(ngModel)]="scheduleTimezone" class="timezone-select">
+                @for (tz of timezones; track tz.value) {
+                  <option [value]="tz.value">{{ tz.label }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Schedule Summary -->
+            @if (scheduleDays.length > 0) {
+              <div class="schedule-summary">
+                <strong>Resume :</strong>
+                Le quiz sera accessible chaque
+                @for (day of scheduleDays; track day; let last = $last) {
+                  <span class="summary-day">{{ daysOfWeek[day].label }}{{ last ? '' : ', ' }}</span>
+                }
+                de {{ scheduleStartTime }} a {{ scheduleEndTime }}
+                ({{ getTimezoneLabel() }}).
+              </div>
+            }
+
+            @if (scheduleDays.length === 0) {
+              <div class="warning-box">
+                Selectionnez au moins un jour pour que la programmation fonctionne.
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Time Limit Card -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h3>Duree du Quiz</h3>
+        </div>
+        <div class="card-body">
+          <p class="setting-description">
+            Definissez le temps accorde aux joueurs pour completer le quiz.
+          </p>
+
+          <div class="time-setting">
+            <label for="timeLimit" class="time-label">Duree (en minutes) :</label>
+            <div class="time-input-group">
+              <button class="time-btn" (click)="timeMinutes = timeMinutes > 1 ? timeMinutes - 1 : 1">-</button>
+              <input
+                type="number"
+                id="timeLimit"
+                [(ngModel)]="timeMinutes"
+                min="1"
+                max="120"
+                class="time-input"
+              />
+              <button class="time-btn" (click)="timeMinutes = timeMinutes < 120 ? timeMinutes + 1 : 120">+</button>
+            </div>
+            <span class="time-hint">Min: 1 min -- Max: 120 min ({{ timeMinutes * 60 }} secondes)</span>
+          </div>
+
+          <div class="time-presets">
+            <span class="presets-label">Prereglages :</span>
+            <div class="presets-buttons">
+              <button class="preset-btn" [class.active]="timeMinutes === 5" (click)="timeMinutes = 5">5 min</button>
+              <button class="preset-btn" [class.active]="timeMinutes === 10" (click)="timeMinutes = 10">10 min</button>
+              <button class="preset-btn" [class.active]="timeMinutes === 15" (click)="timeMinutes = 15">15 min</button>
+              <button class="preset-btn" [class.active]="timeMinutes === 20" (click)="timeMinutes = 20">20 min</button>
+              <button class="preset-btn" [class.active]="timeMinutes === 30" (click)="timeMinutes = 30">30 min</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Last updated -->
+    @if (settings()?.updated_at) {
+      <p class="last-updated">
+        Derniere modification : {{ formatDate(settings()!.updated_at) }}
+      </p>
+    }
+
+    <!-- Save button -->
+    <div class="actions">
+      <button
+        class="btn-save"
+        (click)="saveSettings()"
+        [disabled]="isSaving()"
+      >
+        {{ isSaving() ? 'Sauvegarde...' : 'Sauvegarder les parametres' }}
+      </button>
+    </div>
+  }
+</div>

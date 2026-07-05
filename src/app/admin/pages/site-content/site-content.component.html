@@ -1,0 +1,121 @@
+<div class="site-content-page">
+  <div class="page-header">
+    <h2 class="page-heading">Contenu du Site</h2>
+    <p class="page-subtitle">Modifiez les textes et images affiches sur le site public</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadContent()">Reessayer</button>
+    </div>
+  } @else {
+    @if (successMessage()) {
+      <div class="success-message">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <div class="content-layout">
+      <!-- Section tabs -->
+      <div class="section-tabs">
+        @for (section of sectionConfig; track section.key) {
+          <button
+            class="section-tab"
+            [class.active]="activeSection() === section.key"
+            (click)="setActiveSection(section.key)"
+          >
+            <span class="tab-icon">{{ section.icon }}</span>
+            <span class="tab-label">{{ section.label }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Content editor -->
+      <div class="content-editor">
+        @if (currentSection(); as section) {
+          <div class="section-header">
+            <h3>
+              <span class="section-icon">{{ section.icon }}</span>
+              {{ section.label }}
+            </h3>
+          </div>
+
+          <div class="content-items">
+            @for (item of section.items; track item.id) {
+              <div class="content-item" [class.modified]="modifiedItems().has(item.id)">
+                <label class="item-label">
+                  {{ item.label }}
+                  @if (modifiedItems().has(item.id)) {
+                    <span class="modified-badge">modifie</span>
+                  }
+                </label>
+
+                @if (item.content_type === 'text') {
+                  <input
+                    type="text"
+                    class="item-input"
+                    [value]="getModifiedValue(item)"
+                    (input)="onValueChange(item, $any($event.target).value)"
+                  />
+                }
+
+                @if (item.content_type === 'textarea' || item.content_type === 'html') {
+                  <textarea
+                    class="item-textarea"
+                    rows="3"
+                    [value]="getModifiedValue(item)"
+                    (input)="onValueChange(item, $any($event.target).value)"
+                  ></textarea>
+                  @if (item.content_type === 'html') {
+                    <span class="item-hint">HTML autorise</span>
+                  }
+                }
+
+                @if (item.content_type === 'image') {
+                  <div class="image-editor">
+                    @if (item.content_value) {
+                      <div class="image-preview">
+                        <img [src]="getImageUrl(item.content_value)" [alt]="item.label" />
+                      </div>
+                    }
+                    <div class="image-upload">
+                      <label class="upload-btn">
+                        Changer l'image
+                        <input
+                          type="file"
+                          accept="image/*"
+                          (change)="onImageUpload(item, $event)"
+                          hidden
+                        />
+                      </label>
+                      <span class="current-file">{{ item.content_value }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Save bar -->
+    @if (hasChanges()) {
+      <div class="save-bar">
+        <span class="changes-count">{{ modifiedItems().size }} modification(s) non sauvegardee(s)</span>
+        <div class="save-actions">
+          <button class="btn-discard" (click)="discardChanges()">Annuler</button>
+          <button class="btn-save" (click)="saveChanges()" [disabled]="isSaving()">
+            {{ isSaving() ? 'Sauvegarde...' : 'Sauvegarder' }}
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

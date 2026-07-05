@@ -1,0 +1,108 @@
+<div class="question-edit">
+  <div class="page-header">
+    <a routerLink="/admin/questions" class="back-link">← Retour aux questions</a>
+    <h2>{{ isNew() ? 'Nouvelle question' : 'Modifier la question' }}</h2>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      @if (!isNew()) {
+        <button (click)="loadQuestion(question()!.id)">Réessayer</button>
+      }
+    </div>
+  }
+
+  @if (isLoading() && !isNew()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else {
+    <div class="form-card">
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="category">Catégorie *</label>
+          <select id="category" [(ngModel)]="formData.category_id" name="category_id" required>
+            @for (cat of categories(); track cat.id) {
+              <option [ngValue]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="question">Question *</label>
+          <textarea
+            id="question"
+            [(ngModel)]="formData.question"
+            name="question"
+            rows="3"
+            required
+            placeholder="Entrez votre question..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Options de réponse *</label>
+          <div class="options-list">
+            @for (option of formData.options; track trackByIndex($index); let i = $index) {
+              <div class="option-row">
+                <input
+                  type="radio"
+                  [id]="'correct_' + i"
+                  [(ngModel)]="formData.correct_answer"
+                  [value]="i"
+                  name="correct_answer"
+                />
+                <input
+                  type="text"
+                  [(ngModel)]="formData.options[i]"
+                  [name]="'option_' + i"
+                  [placeholder]="'Option ' + (i + 1)"
+                  class="option-input"
+                />
+                <label [for]="'correct_' + i" class="correct-label">
+                  {{ formData.correct_answer === i ? 'Correcte' : '' }}
+                </label>
+              </div>
+            }
+          </div>
+          <p class="help-text">Sélectionnez le bouton radio à côté de la réponse correcte</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="difficulty">Difficulté *</label>
+            <select id="difficulty" [(ngModel)]="formData.difficulty" name="difficulty" required>
+              <option value="easy">Facile</option>
+              <option value="medium">Moyen</option>
+              <option value="hard">Difficile</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="is_active">Statut</label>
+            <div class="toggle-container">
+              <label class="toggle">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="formData.is_active"
+                  name="is_active"
+                />
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">{{ formData.is_active ? 'Active' : 'Inactive' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/admin/questions" class="btn-cancel">Annuler</a>
+          <button type="submit" class="btn-submit" [disabled]="isSaving()">
+            {{ isSaving() ? 'Enregistrement...' : (isNew() ? 'Créer' : 'Enregistrer') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

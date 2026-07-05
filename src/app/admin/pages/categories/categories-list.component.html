@@ -1,0 +1,126 @@
+<div class="categories-list">
+  <div class="page-header">
+    <h2>Catégories</h2>
+    <button (click)="toggleNewForm()" class="btn-new">
+      {{ showNewForm() ? 'Annuler' : '+ Nouvelle catégorie' }}
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadCategories()">Réessayer</button>
+    </div>
+  }
+
+  <!-- New Category Form -->
+  @if (showNewForm()) {
+    <div class="form-card">
+      <h3>Nouvelle catégorie</h3>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="new_name">Nom *</label>
+          <input
+            type="text"
+            id="new_name"
+            [(ngModel)]="newCategory.name"
+            placeholder="Nom de la catégorie"
+          />
+        </div>
+        <div class="form-group flex-2">
+          <label for="new_description">Description</label>
+          <input
+            type="text"
+            id="new_description"
+            [(ngModel)]="newCategory.description"
+            placeholder="Description (optionnelle)"
+          />
+        </div>
+        <div class="form-actions">
+          <button (click)="createCategory()" class="btn-submit">Créer</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else {
+    <div class="categories-grid">
+      @for (category of categories(); track category.id) {
+        <div class="category-card">
+          @if (editingId() === category.id) {
+            <!-- Edit Mode -->
+            <div class="edit-form">
+              <div class="form-group">
+                <input
+                  type="text"
+                  [(ngModel)]="editCategory.name"
+                  placeholder="Nom"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  [(ngModel)]="editCategory.description"
+                  placeholder="Description"
+                />
+              </div>
+              <div class="edit-actions">
+                <button (click)="cancelEdit()" class="btn-cancel-sm">Annuler</button>
+                <button (click)="updateCategory(category.id)" class="btn-save-sm">Sauver</button>
+              </div>
+            </div>
+          } @else {
+            <!-- View Mode -->
+            <div class="category-header">
+              <div class="category-icon">📁</div>
+              <div class="category-info">
+                <h4>{{ category.name }}</h4>
+                @if (category.description) {
+                  <p>{{ category.description }}</p>
+                }
+              </div>
+            </div>
+            <div class="category-stats">
+              <span class="question-count">{{ category.question_count }} questions</span>
+            </div>
+            <div class="category-actions">
+              <button (click)="startEdit(category)" class="btn-edit">Modifier</button>
+              <button
+                (click)="confirmDelete(category.id)"
+                class="btn-delete"
+                [disabled]="category.question_count > 0"
+                [title]="category.question_count > 0 ? 'Impossible de supprimer une catégorie avec des questions' : 'Supprimer'"
+              >
+                Supprimer
+              </button>
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>Aucune catégorie trouvée</p>
+          <button (click)="toggleNewForm()" class="btn-new-empty">Créer une catégorie</button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Confirmer la suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.</p>
+        <div class="modal-actions">
+          <button (click)="cancelDelete()" class="btn-cancel">Annuler</button>
+          <button (click)="deleteCategory(deleteConfirm()!)" class="btn-confirm">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

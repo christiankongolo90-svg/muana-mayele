@@ -1,0 +1,133 @@
+<div class="questions-list">
+  <div class="page-header">
+    <h2>Questions</h2>
+    <a routerLink="/admin/questions/new" class="btn-new">+ Nouvelle question</a>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Rechercher une question..."
+      />
+      <button (click)="onSearch()">Rechercher</button>
+    </div>
+
+    <select [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
+      <option [ngValue]="undefined">Toutes les catégories</option>
+      @for (cat of categories(); track cat.id) {
+        <option [ngValue]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadQuestions()">Réessayer</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Question</th>
+            <th>Catégorie</th>
+            <th>Difficulté</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (question of questions(); track question.id) {
+            <tr>
+              <td>{{ question.id }}</td>
+              <td class="question-cell">{{ truncateText(question.question, 60) }}</td>
+              <td>
+                <span class="category-badge">{{ question.category_name }}</span>
+              </td>
+              <td>
+                <span class="difficulty-badge" [class]="question.difficulty">
+                  {{ getDifficultyLabel(question.difficulty) }}
+                </span>
+              </td>
+              <td>
+                <span class="status-badge" [class.active]="question.is_active">
+                  {{ question.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <a [routerLink]="['/admin/questions', question.id]" class="btn-edit">Modifier</a>
+                  <button (click)="confirmDelete(question.id)" class="btn-delete">Supprimer</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-row">Aucune question trouvée</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination() && pagination()!.pages > 1) {
+      <div class="pagination">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="page-btn"
+        >
+          ←
+        </button>
+
+        @for (page of getPages(); track page) {
+          <button
+            (click)="goToPage(page)"
+            [class.active]="page === currentPage"
+            class="page-btn"
+          >
+            {{ page }}
+          </button>
+        }
+
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === pagination()?.pages"
+          class="page-btn"
+        >
+          →
+        </button>
+
+        <span class="page-info">
+          Page {{ currentPage }} sur {{ pagination()?.pages }} ({{ pagination()?.total }} total)
+        </span>
+      </div>
+    }
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Confirmer la suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cette question ? Cette action est irréversible.</p>
+        <div class="modal-actions">
+          <button (click)="cancelDelete()" class="btn-cancel">Annuler</button>
+          <button (click)="deleteQuestion(deleteConfirm()!)" class="btn-confirm">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

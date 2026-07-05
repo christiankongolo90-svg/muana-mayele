@@ -1,0 +1,144 @@
+$primary-blue: #003893;
+$primary-blue-dark: #002d75;
+$primary-blue-darker: #001f52;
+$gold: #FFB800;
+
+.main {
+  background: linear-gradient(180deg, $primary-blue-darker 0%, #00245f 40%, $primary-blue-darker 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+.content-section {
+  position: relative;
+  padding: 64px 0 80px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(circle at 15% 25%, rgba($gold, 0.025) 0%, transparent 50%),
+      radial-gradient(circle at 85% 75%, rgba($gold, 0.025) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  z-index: 1;
+}
+
+// === Registration + How it Works Row ===
+.main-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.main-row__right {
+  position: sticky;
+  top: 80px;
+}
+
+// === Leaderboard ===
+.leaderboard-row {
+  margin-bottom: 48px;
+}
+
+// === Tablet ===
+@media (max-width: 992px) {
+  .content-section {
+    padding: 48px 0 64px;
+  }
+
+  .container {
+    padding: 0 24px;
+  }
+
+  .main-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .main-row__right {
+    position: static;
+  }
+}
+
+// === Decorative coins ===
+.decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.coin {
+  position: absolute;
+  font-size: 1.8rem;
+  opacity: 0.4;
+  animation: float-coin 5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+
+  &--1 { top: 5%; left: 4%; animation-delay: 0s; }
+  &--2 { top: 18%; right: 6%; font-size: 1.4rem; animation-delay: 0.8s; }
+  &--3 { top: 45%; left: 2%; font-size: 1.6rem; animation-delay: 1.5s; }
+  &--4 { top: 65%; right: 4%; animation-delay: 2s; }
+  &--5 { bottom: 8%; left: 7%; font-size: 1.4rem; animation-delay: 2.5s; }
+}
+
+@keyframes float-coin {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(12deg); }
+}
+
+// === Tablet: hide some coins ===
+@media (max-width: 992px) {
+  .coin {
+    font-size: 1.4rem;
+    &--2, &--4 { display: none; }
+  }
+}
+
+// === Mobile ===
+@media (max-width: 576px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  .content-section {
+    padding: 24px 0 40px;
+  }
+
+  .main-row {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .leaderboard-row {
+    margin-bottom: 24px;
+  }
+
+  .leaderboard-row {
+    margin-bottom: 32px;
+  }
+
+  .coin {
+    font-size: 1.1rem;
+    opacity: 0.3;
+    &--3, &--5 { display: none; }
+  }
+}

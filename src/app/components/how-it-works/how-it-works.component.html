@@ -1,0 +1,21 @@
+<section class="how-it-works" id="regles">
+  <div class="container">
+    <h2 class="section-title">{{ sectionTitle() }}</h2>
+
+    <div class="steps">
+      @for (step of steps(); track step.number) {
+        <div class="step">
+          <div class="step__number">{{ step.number }}</div>
+          <div class="step__content">
+            <h3 class="step__title">{{ step.title }}</h3>
+            <p class="step__description">{{ step.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (c.get('how_it_works', 'extra_content', '')) {
+      <div class="extra-content" [innerHTML]="c.get('how_it_works', 'extra_content', '')"></div>
+    }
+  </div>
+</section>

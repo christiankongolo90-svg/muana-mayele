@@ -1,0 +1,134 @@
+<div class="session-edit">
+  <div class="page-header">
+    <a routerLink="/admin/sessions" class="back-link">← Retour aux sessions</a>
+    <h2>Détails de la session</h2>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadSession(session()!.id)">Réessayer</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else if (session()) {
+    <!-- Session Info -->
+    <div class="info-card">
+      <h3>Informations</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Utilisateur</span>
+          <span class="info-value">{{ session()?.full_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ session()?.phone }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date</span>
+          <span class="info-value">{{ formatDate(session()!.started_at) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Durée</span>
+          <span class="info-value">{{ formatDuration(session()!.time_taken) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Pourcentage</span>
+          <span class="info-value score" [class.good]="session()!.percentage >= 70" [class.medium]="session()!.percentage >= 50 && session()!.percentage < 70" [class.poor]="session()!.percentage < 50">
+            {{ session()?.percentage }}%
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Statut</span>
+          <span class="info-value">
+            <span class="status-badge" [class.completed]="session()?.is_completed">
+              {{ session()?.is_completed ? 'Terminé' : 'En cours' }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="form-card">
+      <h3>Modifier les scores</h3>
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="correct_answers">Réponses correctes</label>
+            <input
+              type="number"
+              id="correct_answers"
+              [(ngModel)]="formData.correct_answers"
+              name="correct_answers"
+              min="0"
+              [max]="session()!.total_questions"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="wrong_answers">Réponses fausses</label>
+            <input
+              type="number"
+              id="wrong_answers"
+              [(ngModel)]="formData.wrong_answers"
+              name="wrong_answers"
+              min="0"
+              [max]="session()!.total_questions"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="total_points">Points totaux</label>
+            <input
+              type="number"
+              id="total_points"
+              [(ngModel)]="formData.total_points"
+              name="total_points"
+              min="0"
+            />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/admin/sessions" class="btn-cancel">Annuler</a>
+          <button type="submit" class="btn-submit" [disabled]="isSaving()">
+            {{ isSaving() ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Answers List -->
+    @if (answers().length > 0) {
+      <div class="answers-card">
+        <h3>Réponses ({{ answers().length }})</h3>
+        <div class="answers-list">
+          @for (answer of answers(); track answer.question_id; let i = $index) {
+            <div class="answer-item" [class.correct]="answer.is_correct" [class.wrong]="!answer.is_correct">
+              <div class="answer-number">{{ i + 1 }}</div>
+              <div class="answer-content">
+                <p class="answer-question">{{ answer.question }}</p>
+                <div class="answer-details">
+                  <span class="answer-selected">Réponse: Option {{ answer.selected_answer + 1 }}</span>
+                  @if (!answer.is_correct) {
+                    <span class="answer-correct">Correcte: Option {{ answer.correct_answer + 1 }}</span>
+                  }
+                  <span class="answer-points">{{ answer.points_earned }} pts</span>
+                </div>
+              </div>
+              <div class="answer-status">
+                {{ answer.is_correct ? '✓' : '✗' }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>

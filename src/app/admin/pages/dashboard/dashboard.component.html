@@ -1,0 +1,109 @@
+<div class="dashboard">
+  <h2 class="page-heading">Tableau de bord</h2>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadStats()">Réessayer</button>
+    </div>
+  } @else if (stats()) {
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalUsers }}</span>
+          <span class="stat-label">Utilisateurs</span>
+        </div>
+        <a routerLink="/admin/users" class="stat-link">Voir tout →</a>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">❓</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalQuestions }}</span>
+          <span class="stat-label">Questions</span>
+        </div>
+        <a routerLink="/admin/questions" class="stat-link">Voir tout →</a>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalSessions }}</span>
+          <span class="stat-label">Sessions Quiz</span>
+        </div>
+        <a routerLink="/admin/sessions" class="stat-link">Voir tout →</a>
+      </div>
+
+      <div class="stat-card highlight">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.completedSessions }}</span>
+          <span class="stat-label">Quiz complétés</span>
+        </div>
+        <span class="stat-percentage">
+          {{ stats()?.totalSessions ? ((stats()?.completedSessions || 0) / stats()!.totalSessions * 100).toFixed(0) : 0 }}%
+        </span>
+      </div>
+
+      <div class="stat-card accent">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.averageScore?.toFixed(1) || 0 }}%</span>
+          <span class="stat-label">Score moyen</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-section">
+      <div class="recent-card">
+        <h3>Utilisateurs récents</h3>
+        @if (stats()?.recentUsers?.length) {
+          <ul class="recent-list">
+            @for (user of stats()?.recentUsers; track user.id) {
+              <li class="recent-item">
+                <div class="recent-avatar">{{ user.full_name.charAt(0) }}</div>
+                <div class="recent-info">
+                  <span class="recent-name">{{ user.full_name }}</span>
+                  <span class="recent-meta">{{ user.phone }}</span>
+                </div>
+                <a [routerLink]="['/admin/users', user.id]" class="recent-link">Voir</a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty-message">Aucun utilisateur récent</p>
+        }
+      </div>
+
+      <div class="recent-card">
+        <h3>Sessions récentes</h3>
+        @if (stats()?.recentSessions?.length) {
+          <ul class="recent-list">
+            @for (session of stats()?.recentSessions; track session.id) {
+              <li class="recent-item">
+                <div class="recent-avatar score">{{ session.percentage }}%</div>
+                <div class="recent-info">
+                  <span class="recent-name">{{ session.full_name }}</span>
+                  <span class="recent-meta">{{ formatDate(session.started_at) }}</span>
+                </div>
+                <span class="session-score" [class.good]="session.percentage >= 70" [class.medium]="session.percentage >= 50 && session.percentage < 70" [class.poor]="session.percentage < 50">
+                  {{ session.correct_answers }}/{{ session.total_questions }}
+                </span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty-message">Aucune session récente</p>
+        }
+      </div>
+    </div>
+  }
+</div>

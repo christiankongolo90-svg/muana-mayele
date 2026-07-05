@@ -41,3 +41,18 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment files (contain secrets)
+.env
+backend/.env
+backend/.env.production
+backend/update-env.py
+backend/check-infobip.php
+
+# Uploads
+backend/uploads/*.png
+backend/uploads/*.jpg
+
+# Deploy scripts with credentials
+deploy.py
+deploy_backend.py

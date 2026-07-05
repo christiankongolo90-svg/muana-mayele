@@ -1,0 +1,140 @@
+<app-header></app-header>
+
+<main class="main">
+  <div class="container">
+    @if (isLoading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Chargement du profil...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-state">
+        <span class="error-icon">😕</span>
+        <p>{{ error() }}</p>
+        <button class="btn btn--primary" (click)="loadProfile()">Réessayer</button>
+      </div>
+    } @else if (profile()) {
+      <!-- Profile Header -->
+      <section class="profile-header">
+        <div class="profile-avatar">
+          <span class="avatar-icon">👤</span>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">{{ profile()!.user.full_name }}</h1>
+          <p class="profile-phone">{{ profile()!.user.country_code }} {{ profile()!.user.phone }}</p>
+          @if (profile()!.user.neighborhood) {
+            <p class="profile-location">📍 {{ profile()!.user.neighborhood }}</p>
+          }
+          <p class="profile-member">Membre depuis {{ formatDate(profile()!.user.member_since).split(',')[0] }}</p>
+        </div>
+        <button class="btn btn--primary btn--play" (click)="startQuiz()">
+          🎮 Jouer au Quiz
+        </button>
+      </section>
+
+      <!-- Stats Cards -->
+      <section class="stats-section">
+        <h2 class="section-title">Mes Statistiques</h2>
+        <div class="stats-grid">
+          <div class="stat-card stat-card--rank">
+            <span class="stat-icon">🏆</span>
+            <div class="stat-content">
+              @if (profile()!.stats.rank) {
+                <span class="stat-value">{{ profile()!.stats.rank }}{{ getRankSuffix(profile()!.stats.rank!) }}</span>
+              } @else {
+                <span class="stat-value">--</span>
+              }
+              <span class="stat-label">Classement</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--best">
+            <span class="stat-icon">⭐</span>
+            <div class="stat-content">
+              <span class="stat-value">{{ profile()!.stats.best_score }}</span>
+              <span class="stat-label">Meilleur Score</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--total">
+            <span class="stat-icon">🎯</span>
+            <div class="stat-content">
+              <span class="stat-value">{{ profile()!.stats.total_points }}</span>
+              <span class="stat-label">Points Totaux</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--quizzes">
+            <span class="stat-icon">📝</span>
+            <div class="stat-content">
+              <span class="stat-value">{{ profile()!.stats.total_quizzes }}</span>
+              <span class="stat-label">Quiz Joués</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--accuracy">
+            <span class="stat-icon">✅</span>
+            <div class="stat-content">
+              <span class="stat-value">{{ profile()!.stats.accuracy }}%</span>
+              <span class="stat-label">Précision</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--average">
+            <span class="stat-icon">📊</span>
+            <div class="stat-content">
+              <span class="stat-value">{{ profile()!.stats.average_score }}</span>
+              <span class="stat-label">Moyenne</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz History -->
+      <section class="history-section">
+        <h2 class="section-title">Historique des Quiz</h2>
+        @if (profile()!.history.length === 0) {
+          <div class="empty-history">
+            <span class="empty-icon">🎮</span>
+            <p>Aucun quiz complété pour le moment</p>
+            <button class="btn btn--primary" (click)="startQuiz()">Commencer mon premier quiz</button>
+          </div>
+        } @else {
+          <div class="history-list">
+            @for (quiz of profile()!.history; track quiz.session_id) {
+              <div class="history-item" [class]="'history-item--' + getScoreClass(quiz.score)">
+                <div class="history-date">
+                  <span class="date-day">{{ formatDate(quiz.played_at).split(' ')[0] }}</span>
+                  <span class="date-month">{{ formatDate(quiz.played_at).split(' ')[1] }}</span>
+                </div>
+                <div class="history-details">
+                  <div class="history-score">
+                    <span class="score-value">{{ quiz.score }}</span>
+                    <span class="score-label">points</span>
+                  </div>
+                  <div class="history-meta">
+                    <span class="meta-item">✓ {{ quiz.correct_answers }}/{{ quiz.total_questions }}</span>
+                    <span class="meta-item">⏱ {{ formatTime(quiz.time_taken) }}</span>
+                  </div>
+                </div>
+                <div class="history-badge">
+                  @if (getScoreClass(quiz.score) === 'excellent') {
+                    <span>🌟</span>
+                  } @else if (getScoreClass(quiz.score) === 'good') {
+                    <span>👍</span>
+                  } @else if (getScoreClass(quiz.score) === 'average') {
+                    <span>📈</span>
+                  } @else {
+                    <span>💪</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+  </div>
+</main>
+
+<app-footer></app-footer>

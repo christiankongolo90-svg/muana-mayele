@@ -1,0 +1,613 @@
+$primary-blue: #003893;
+$primary-blue-dark: #002d75;
+$gold: #FFB800;
+$gold-dark: #E5A600;
+$gold-light: #FFF3D0;
+$red-accent: #CE1126;
+$white: #ffffff;
+$text-dark: #1a1a2e;
+
+.registration-wrapper {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+// Form Card
+.registration-form {
+  background: linear-gradient(145deg, rgba(255,255,255,0.99), rgba(248,249,255,0.97));
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.registration-form__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $primary-blue;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: $gold;
+    border-radius: 50%;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $text-dark;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    padding: 10px 14px;
+    border: 2px solid rgba($primary-blue, 0.15);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background-color: $white;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $gold;
+      box-shadow: 0 0 0 3px rgba($gold, 0.15);
+    }
+
+    &::placeholder {
+      color: #aaa;
+      font-size: 0.85rem;
+    }
+  }
+
+  &--checkbox {
+    margin-top: 5px;
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-top: 2px;
+    accent-color: $gold;
+    cursor: pointer;
+  }
+
+  .checkbox-text {
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.4;
+  }
+}
+
+// Required field indicator
+.required {
+  color: #dc2626;
+}
+
+// Phone input with country selector
+.phone-input {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+
+  input {
+    flex: 1;
+    min-width: 0; // Prevent flex child from overflowing
+  }
+}
+
+.country-select {
+  width: 110px;
+  min-width: 0;
+  padding: 10px 8px;
+  border: 2px solid rgba($primary-blue, 0.15);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background-color: $white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: $gold;
+    box-shadow: 0 0 0 3px rgba($gold, 0.15);
+    outline: none;
+  }
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+// Passcode input
+.passcode-input {
+  text-align: center;
+  font-size: 1.8rem !important;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  padding: 15px !important;
+  font-family: monospace;
+}
+
+// Verification section
+.verification-info {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba($primary-blue, 0.05);
+  border-radius: 12px;
+
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .phone-display {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $primary-blue;
+    margin-top: 8px !important;
+  }
+}
+
+// Debug passcode (development only)
+.debug-passcode {
+  padding: 10px 14px;
+  background: rgba($gold, 0.15);
+  border: 1px dashed $gold;
+  border-radius: 10px;
+  color: $gold-dark;
+  font-size: 0.9rem;
+  text-align: center;
+
+  strong {
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+  }
+}
+
+// Countdown timer
+.countdown {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 10px 0;
+
+  strong {
+    color: $primary-blue;
+    font-size: 1.1rem;
+  }
+
+  &.expired {
+    color: #dc2626;
+  }
+}
+
+// Form footer links
+.form-footer {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba($primary-blue, 0.1);
+
+  p {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .separator {
+    color: #ccc;
+    margin: 0 10px;
+  }
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: $primary-blue;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover {
+    color: $gold-dark;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.success-message {
+  padding: 10px 14px;
+  background: rgba(#22c55e, 0.1);
+  border: 1px solid rgba(#22c55e, 0.3);
+  border-radius: 10px;
+  color: #16a34a;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.error-message {
+  padding: 10px 14px;
+  background: rgba(#ef4444, 0.1);
+  border: 1px solid rgba(#ef4444, 0.3);
+  border-radius: 10px;
+  color: #dc2626;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.btn-submit {
+  margin-top: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, $gold, $gold-dark);
+  color: $white;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba($gold, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($gold, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba($white, 0.3);
+    border-top-color: $white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Prize Banner
+.prize-banner {
+  background: linear-gradient(145deg, rgba(255,255,255,0.99), rgba($gold-light, 0.3));
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 3px solid $gold;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.prize-banner__header {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.prize-banner__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $primary-blue;
+  margin-bottom: 8px;
+  line-height: 1.3;
+
+  .highlight {
+    color: $red-accent;
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba($red-accent, 0.2);
+  }
+}
+
+.prize-banner__subtitle {
+  font-size: 0.9rem;
+  color: #555;
+
+  strong {
+    color: $gold-dark;
+  }
+}
+
+.prize-banner__illustration {
+  flex: 1;
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trophy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  z-index: 3;
+  animation: bounce-trophy 2s ease-in-out infinite;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  }
+}
+
+@keyframes bounce-trophy {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -55%) scale(1.05); }
+}
+
+.phone {
+  position: absolute;
+  left: 10%;
+  top: 20%;
+  width: 50px;
+  height: 80px;
+  background: linear-gradient(145deg, #333, #1a1a1a);
+  border-radius: 8px;
+  padding: 4px;
+  transform: rotate(-10deg);
+  z-index: 2;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.phone__screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, $primary-blue, $primary-blue-dark);
+  border-radius: 5px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.phone__header {
+  font-size: 6px;
+  color: $white;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.phone__option {
+  background: rgba($white, 0.2);
+  border-radius: 3px;
+  padding: 3px;
+  font-size: 6px;
+  color: $white;
+  text-align: center;
+
+  &--correct {
+    background: $gold;
+    color: $primary-blue-dark;
+    font-weight: 600;
+  }
+}
+
+.person {
+  position: absolute;
+  font-size: 2.5rem;
+  z-index: 2;
+
+  &--left {
+    left: 5%;
+    bottom: 10%;
+  }
+
+  &--right {
+    right: 5%;
+    bottom: 10%;
+  }
+}
+
+.mini-coin {
+  position: absolute;
+  font-size: 1.2rem;
+  z-index: 1;
+  animation: float-mini 3s ease-in-out infinite;
+
+  &--1 {
+    top: 10%;
+    right: 20%;
+    animation-delay: 0s;
+  }
+
+  &--2 {
+    bottom: 30%;
+    left: 25%;
+    animation-delay: 0.5s;
+  }
+
+  &--3 {
+    top: 40%;
+    right: 10%;
+    animation-delay: 1s;
+  }
+}
+
+@keyframes float-mini {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(10deg); }
+}
+
+.flag {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  width: 60px;
+  height: auto;
+  z-index: 1;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+// Mobile
+@media (max-width: 576px) {
+  .registration-form {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .registration-form__title {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+
+  .form {
+    gap: 12px;
+  }
+
+  .form-group {
+    gap: 5px;
+
+    label {
+      font-size: 0.82rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      padding: 12px 14px;
+      font-size: 16px; // Prevents iOS zoom on focus
+      border-radius: 10px;
+    }
+  }
+
+  .phone-input {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .country-select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .checkbox-label {
+    gap: 12px;
+
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+    }
+
+    .checkbox-text {
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+  }
+
+  .passcode-input {
+    font-size: 1.5rem !important;
+    letter-spacing: 0.4em;
+    padding: 14px !important;
+  }
+
+  .btn-submit {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .form-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+
+    p { font-size: 0.9rem; }
+  }
+
+  .btn-link {
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+
+  .verification-info {
+    padding: 14px;
+
+    .phone-display {
+      font-size: 1rem;
+    }
+  }
+
+  .error-message,
+  .success-message {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+  .hint {
+    font-size: 0.78rem;
+  }
+}
+
+// Small phones
+@media (max-width: 380px) {
+  .registration-form {
+    padding: 16px 14px;
+  }
+
+  .form {
+    gap: 10px;
+  }
+}

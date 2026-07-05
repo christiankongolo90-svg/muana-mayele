@@ -1,0 +1,128 @@
+<div class="sessions-list">
+  <div class="page-header">
+    <h2>Sessions Quiz</h2>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadSessions()">Réessayer</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Durée</th>
+            <th>Score</th>
+            <th>Points</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of sessions(); track session.id) {
+            <tr>
+              <td>{{ session.id }}</td>
+              <td>
+                <div class="user-cell">
+                  <span class="user-avatar">{{ session.full_name.charAt(0) }}</span>
+                  <div class="user-info">
+                    <span class="user-name">{{ session.full_name }}</span>
+                    <span class="user-phone">{{ session.phone }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ formatDate(session.started_at) }}</td>
+              <td>{{ formatDuration(session.live_duration || session.time_taken) }}</td>
+              <td>
+                <span class="score-badge"
+                  [class.good]="getCorrect(session) / session.total_questions >= 0.7"
+                  [class.medium]="getCorrect(session) / session.total_questions >= 0.5 && getCorrect(session) / session.total_questions < 0.7"
+                  [class.poor]="getCorrect(session) / session.total_questions < 0.5">
+                  {{ getCorrect(session) }}/{{ session.total_questions }} ({{ getPercentage(session) }}%)
+                </span>
+              </td>
+              <td>
+                <span class="points-badge">{{ getPoints(session) }} pts</span>
+              </td>
+              <td>
+                <span class="status-badge" [class.completed]="session.is_completed">
+                  {{ session.is_completed ? 'Terminé' : 'En cours' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <a [routerLink]="['/admin/sessions', session.id]" class="btn-edit">Voir</a>
+                  <button (click)="confirmDelete(session.id)" class="btn-delete">Supprimer</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-row">Aucune session trouvée</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination() && pagination()!.pages > 1) {
+      <div class="pagination">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="page-btn"
+        >
+          ←
+        </button>
+
+        @for (page of getPages(); track page) {
+          <button
+            (click)="goToPage(page)"
+            [class.active]="page === currentPage"
+            class="page-btn"
+          >
+            {{ page }}
+          </button>
+        }
+
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === pagination()?.pages"
+          class="page-btn"
+        >
+          →
+        </button>
+
+        <span class="page-info">
+          Page {{ currentPage }} sur {{ pagination()?.pages }} ({{ pagination()?.total }} total)
+        </span>
+      </div>
+    }
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Confirmer la suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cette session ? Cette action est irréversible.</p>
+        <div class="modal-actions">
+          <button (click)="cancelDelete()" class="btn-cancel">Annuler</button>
+          <button (click)="deleteSession(deleteConfirm()!)" class="btn-confirm">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

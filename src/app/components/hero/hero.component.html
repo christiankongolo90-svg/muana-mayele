@@ -1,0 +1,91 @@
+<section class="hero">
+  <div class="container">
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 class="hero__title"
+          [style.font-family]="c.get('hero', 'title_font_family', '')"
+          [style.font-size]="c.get('hero', 'title_font_size', '')"
+          [style.font-weight]="c.get('hero', 'title_font_weight', '')">
+          {{ c.get('hero', 'title', 'Participez au Quiz Live') }}
+          <span class="hero__title--highlight"
+            [style.font-size]="c.get('hero', 'highlight_font_size', '')">{{ c.get('hero', 'title_highlight', 'et remportez des points!') }}</span>
+        </h1>
+        <p class="hero__description"
+          [style.font-size]="c.get('hero', 'description_font_size', '')">
+          {{ c.get('hero', 'description', 'Testez vos connaissances et mesurez-vous aux autres Congolais !') }}
+        </p>
+        <div class="hero__buttons">
+          @if (!checkingStatus() && !quizOpen()) {
+            <div class="quiz-closed-banner">
+              @if (schedule()?.next_session) {
+                <div class="schedule-notice">
+                  <span class="schedule-notice__icon">&#x1F4C5;</span>
+                  <div class="schedule-notice__content">
+                    <span class="schedule-notice__title">Prochaine session</span>
+                    <span class="schedule-notice__day">{{ getNextSessionText() }}</span>
+                  </div>
+                </div>
+              }
+              @if (countdown()) {
+                <div class="countdown-blocks">
+                  <div class="countdown-block">
+                    <span class="countdown-block__value">{{ countdownDays().toString().padStart(2, '0') }}</span>
+                    <span class="countdown-block__label">Jours</span>
+                  </div>
+                  <span class="countdown-block__separator">:</span>
+                  <div class="countdown-block">
+                    <span class="countdown-block__value">{{ countdownHours().toString().padStart(2, '0') }}</span>
+                    <span class="countdown-block__label">Heures</span>
+                  </div>
+                  <span class="countdown-block__separator">:</span>
+                  <div class="countdown-block">
+                    <span class="countdown-block__value">{{ countdownMinutes().toString().padStart(2, '0') }}</span>
+                    <span class="countdown-block__label">Minutes</span>
+                  </div>
+                  <span class="countdown-block__separator">:</span>
+                  <div class="countdown-block">
+                    <span class="countdown-block__value">{{ countdownSeconds().toString().padStart(2, '0') }}</span>
+                    <span class="countdown-block__label">Sec</span>
+                  </div>
+                </div>
+              } @else if (!schedule()?.next_session) {
+                <p class="closed-message">{{ c.get('hero', 'closed_message', 'Le quiz est actuellement fermé. Revenez bientôt !') }}</p>
+              }
+            </div>
+          }
+          <button class="btn btn--play hero__cta" (click)="playQuiz()">
+            &#x1F3AE; Jouer au Quiz
+          </button>
+          @if (c.get('hero', 'live_link', '')) {
+            <a [href]="c.get('hero', 'live_link', '')" target="_blank" rel="noopener" class="btn btn--live hero__cta">
+              &#x1F534; Suivez le Quiz Live
+            </a>
+          }
+          <a href="#inscription" class="btn btn--secondary hero__cta">
+            {{ c.get('hero', 'register_text', "S'inscrire") }}
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__image">
+        <div class="hero__image-wrapper"
+          [style.width]="c.get('hero', 'image_max_width', '')"
+          [style.height]="c.get('hero', 'image_max_height', '')"
+          [style.overflow]="'hidden'">
+          <img [src]="c.getImageUrl('hero', 'image', 'person_hero.png')" alt="Quiz participant" class="hero__person" loading="eager" />
+          <div class="hero__decorations">
+            <span class="question-mark q1">?</span>
+            <span class="question-mark q2">?</span>
+            <span class="question-mark q3">?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__wave">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 20C240 5 480 35 720 20C960 5 1200 35 1440 20V40H0V20Z" fill="#001f52"/>
+    </svg>
+  </div>
+</section>

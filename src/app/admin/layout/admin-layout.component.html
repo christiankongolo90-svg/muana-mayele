@@ -1,0 +1,52 @@
+<div class="admin-layout" [class.sidebar-collapsed]="sidebarCollapsed()">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="logo" *ngIf="!sidebarCollapsed()">Muana Mayele</span>
+      <span class="logo-mini" *ngIf="sidebarCollapsed()">MM</span>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        {{ sidebarCollapsed() ? '→' : '←' }}
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          class="nav-item"
+          [title]="item.label"
+        >
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span class="nav-label" *ngIf="!sidebarCollapsed()">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <a routerLink="/" class="nav-item" title="Retour au site">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Retour au site</span>
+      </a>
+      <button class="nav-item logout-btn" (click)="logout()" title="Déconnexion">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="admin-header">
+      <h1 class="page-title">Administration</h1>
+      <div class="admin-info" *ngIf="adminUser()">
+        <span class="admin-name">{{ adminUser()?.full_name }}</span>
+        <span class="admin-badge">Admin</span>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

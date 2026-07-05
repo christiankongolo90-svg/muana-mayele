@@ -1,0 +1,45 @@
+<section class="quiz-info">
+  <div class="container">
+    <h2 class="quiz-info__title">{{ c.get('quiz_info', 'title', 'Le Quiz en Direct') }}</h2>
+
+    <ul class="quiz-info__list">
+      @for (item of infoItems(); track item) {
+        <li class="quiz-info__item">
+          <span class="check-icon">&#x2713;</span>
+          {{ item }}
+        </li>
+      }
+    </ul>
+
+    <div class="quiz-info__highlight">
+      <p [innerHTML]="c.get('quiz_info', 'highlight_text', 'Le participant avec le plus de points <strong>gagne 50 $</strong>.')"></p>
+    </div>
+
+    @if (quizOpen()) {
+      <button class="btn btn--primary quiz-info__cta" (click)="startQuiz()">
+        {{ c.get('quiz_info', 'cta_text', 'Commencer le Quiz') }}
+      </button>
+    } @else {
+      <div class="quiz-info__closed">
+        @if (schedule()?.next_session) {
+          <div class="next-session-badge">
+            <span class="next-session-badge__icon">&#x23F0;</span>
+            <div class="next-session-badge__text">
+              <span class="next-session-badge__label">Prochaine session :</span>
+              <span class="next-session-badge__value">{{ getNextSessionText() }}</span>
+            </div>
+          </div>
+          @if (schedule()?.days?.length) {
+            <p class="schedule-days-info">
+              Le quiz est ouvert chaque : <strong>{{ getScheduledDaysText() }}</strong>
+            </p>
+          }
+        } @else {
+          <div class="quiz-closed-notice">
+            Le quiz est actuellement ferme. Revenez bientot !
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

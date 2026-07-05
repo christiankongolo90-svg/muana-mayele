@@ -1,0 +1,132 @@
+<div class="users-list">
+  <div class="page-header">
+    <h2>Utilisateurs</h2>
+    <div class="header-actions">
+      <button class="btn-export" (click)="exportToExcel()" [disabled]="isExporting()">
+        @if (isExporting()) {
+          <span class="spinner-small"></span> Exportation...
+        } @else {
+          Exporter Excel
+        }
+      </button>
+      <div class="search-box">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Rechercher par nom ou téléphone..."
+        />
+        <button (click)="onSearch()">Rechercher</button>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">
+      <span>{{ error() }}</span>
+      <button (click)="loadUsers()">Réessayer</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Chargement...</span>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Email</th>
+            <th>Profession</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>
+                <div class="user-cell">
+                  <span class="user-avatar">{{ user.full_name.charAt(0) }}</span>
+                  {{ user.full_name }}
+                </div>
+              </td>
+              <td>{{ user.country_code }} {{ user.phone }}</td>
+              <td>{{ user.email || '-' }}</td>
+              <td>{{ user.profession || '-' }}</td>
+              <td>
+                <span class="role-badge" [class.admin]="user.role === 'admin'">
+                  {{ user.role === 'admin' ? 'Admin' : 'Utilisateur' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <a [routerLink]="['/admin/users', user.id]" class="btn-edit">Modifier</a>
+                  <button (click)="confirmDelete(user.id)" class="btn-delete">Supprimer</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-row">Aucun utilisateur trouvé</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (pagination() && pagination()!.pages > 1) {
+      <div class="pagination">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="page-btn"
+        >
+          ←
+        </button>
+
+        @for (page of getPages(); track page) {
+          <button
+            (click)="goToPage(page)"
+            [class.active]="page === currentPage"
+            class="page-btn"
+          >
+            {{ page }}
+          </button>
+        }
+
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === pagination()?.pages"
+          class="page-btn"
+        >
+          →
+        </button>
+
+        <span class="page-info">
+          Page {{ currentPage }} sur {{ pagination()?.pages }} ({{ pagination()?.total }} total)
+        </span>
+      </div>
+    }
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Confirmer la suppression</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.</p>
+        <div class="modal-actions">
+          <button (click)="cancelDelete()" class="btn-cancel">Annuler</button>
+          <button (click)="deleteUser(deleteConfirm()!)" class="btn-confirm">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

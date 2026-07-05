@@ -1,0 +1,401 @@
+$primary-blue: #003893;
+$primary-blue-dark: #002d75;
+$primary-blue-darker: #001f52;
+$gold: #FFB800;
+$gold-dark: #E5A600;
+$white: #ffffff;
+
+.main {
+  background: linear-gradient(180deg, $primary-blue 0%, $primary-blue-darker 100%);
+  min-height: 100vh;
+  padding-top: 80px;
+  padding-bottom: 60px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Loading & Error States
+.loading, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: $white;
+  text-align: center;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba($white, 0.2);
+  border-top-color: $gold;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 4rem;
+}
+
+// Profile Header
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba($white, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, $gold, $gold-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-icon {
+  font-size: 3rem;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $white;
+  margin-bottom: 8px;
+}
+
+.profile-phone {
+  color: rgba($white, 0.8);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.profile-location {
+  color: $gold;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.profile-member {
+  color: rgba($white, 0.6);
+  font-size: 0.85rem;
+}
+
+.btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &--primary {
+    background: linear-gradient(135deg, $gold, $gold-dark);
+    color: $white;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($gold, 0.4);
+    }
+  }
+
+  &--play {
+    white-space: nowrap;
+  }
+}
+
+// Section Title
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: $white;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, rgba($gold, 0.5), transparent);
+  }
+}
+
+// Stats Section
+.stats-section {
+  margin-bottom: 30px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: rgba($white, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.stat-icon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($white, 0.1);
+  border-radius: 12px;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: $white;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba($white, 0.7);
+}
+
+.stat-card--rank .stat-value { color: $gold; }
+.stat-card--best .stat-icon { background: rgba($gold, 0.2); }
+.stat-card--accuracy .stat-value { color: #4ade80; }
+
+// History Section
+.history-section {
+  margin-bottom: 30px;
+}
+
+.empty-history {
+  background: rgba($white, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 50px 30px;
+  text-align: center;
+  color: $white;
+
+  .empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  background: rgba($white, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-left: 4px solid rgba($white, 0.3);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateX(5px);
+  }
+
+  &--excellent { border-left-color: $gold; }
+  &--good { border-left-color: #4ade80; }
+  &--average { border-left-color: #60a5fa; }
+  &--low { border-left-color: #f87171; }
+}
+
+.history-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.date-day {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $white;
+}
+
+.date-month {
+  font-size: 0.75rem;
+  color: rgba($white, 0.6);
+  text-transform: uppercase;
+}
+
+.history-details {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.history-score {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $gold;
+}
+
+.score-label {
+  font-size: 0.8rem;
+  color: rgba($white, 0.6);
+}
+
+.history-meta {
+  display: flex;
+  gap: 15px;
+}
+
+.meta-item {
+  font-size: 0.9rem;
+  color: rgba($white, 0.8);
+}
+
+.history-badge {
+  font-size: 1.5rem;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px 20px;
+  }
+
+  .profile-info {
+    text-align: center;
+  }
+
+  .btn--play {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .history-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding-top: 70px;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .profile-header {
+    padding: 20px 16px;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-icon {
+    font-size: 2.5rem;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .history-item {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+
+  .history-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

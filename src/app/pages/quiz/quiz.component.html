@@ -1,0 +1,120 @@
+<div class="quiz-page">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Chargement du quiz...</p>
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="quiz-header">
+    <div class="quiz-header__left">
+      <button class="btn-quit" (click)="quitQuiz()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Quitter
+      </button>
+    </div>
+
+    <div class="quiz-header__center">
+      <div class="timer" [class.timer--low]="isTimeLow()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+        <span>{{ formattedTime() }}</span>
+      </div>
+    </div>
+
+    <div class="quiz-header__right">
+      <div class="score">
+        <span class="score__label">Score</span>
+        <span class="score__value">{{ quizState().score * 50 }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-bar__fill" [style.width.%]="progress()"></div>
+    </div>
+    <div class="progress-text">
+      Question {{ quizState().currentQuestionIndex + 1 }} / {{ quizService.totalQuestions() }}
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="quiz-content">
+    @if (currentQuestion(); as question) {
+      <div class="question-card">
+        <div class="question-category">
+          <span class="category-badge">{{ question.category }}</span>
+        </div>
+
+        <h2 class="question-text">{{ question.question }}</h2>
+
+        <div class="options">
+          @for (option of question.options; track $index) {
+            <button
+              class="option"
+              [class.option--selected]="selectedAnswer() === $index"
+              [class.option--correct]="showFeedback() && $index === question.correctAnswer"
+              [class.option--wrong]="showFeedback() && selectedAnswer() === $index && $index !== question.correctAnswer"
+              [disabled]="showFeedback()"
+              (click)="selectAnswer($index)"
+            >
+              <span class="option__letter">{{ getOptionLetter($index) }}</span>
+              <span class="option__text">{{ option }}</span>
+              @if (showFeedback() && $index === question.correctAnswer) {
+                <span class="option__icon option__icon--correct">✓</span>
+              }
+              @if (showFeedback() && selectedAnswer() === $index && $index !== question.correctAnswer) {
+                <span class="option__icon option__icon--wrong">✗</span>
+              }
+            </button>
+          }
+        </div>
+
+        <!-- Feedback -->
+        @if (showFeedback()) {
+          <div class="feedback" [class.feedback--correct]="isCorrect()" [class.feedback--wrong]="!isCorrect()">
+            @if (isCorrect()) {
+              <span class="feedback__icon">🎉</span>
+              <span class="feedback__text">Bonne réponse ! +50 points</span>
+            } @else {
+              <span class="feedback__icon">😔</span>
+              <span class="feedback__text">Mauvaise réponse</span>
+            }
+          </div>
+        }
+
+        <!-- Action button -->
+        @if (!showFeedback()) {
+          <button
+            class="btn-submit"
+            [disabled]="selectedAnswer() === null"
+            (click)="submitAnswer()"
+          >
+            Valider ma réponse
+          </button>
+        }
+      </div>
+    }
+  </main>
+
+  <!-- Question indicators -->
+  <div class="question-indicators">
+    @for (q of quizService.getQuestions(); track q.id; let i = $index) {
+      <div
+        class="indicator"
+        [class.indicator--current]="i === quizState().currentQuestionIndex"
+        [class.indicator--answered]="quizState().answers[i] !== null"
+        [class.indicator--correct]="quizState().answers[i] === q.correctAnswer"
+        [class.indicator--wrong]="quizState().answers[i] !== null && quizState().answers[i] !== q.correctAnswer"
+      ></div>
+    }
+  </div>
+</div>
