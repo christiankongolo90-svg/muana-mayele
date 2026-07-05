@@ -79,6 +79,18 @@ $text-muted: #6b7280;
   flex-direction: column;
   gap: 0.75rem;
   position: relative;
+  text-decoration: none;
+  color: inherit;
+
+  &.clickable {
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+  }
 
   .stat-icon {
     font-size: 2rem;

@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npx ng build --configuration production && mkdir -p public && cp -r dist/muana-mayele/browser/* public/",
+  "buildCommand": "npx ng build --configuration production",
+  "outputDirectory": "dist/muana-mayele/browser",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }

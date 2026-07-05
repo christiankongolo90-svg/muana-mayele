@@ -14,34 +14,34 @@
   } @else if (stats()) {
     <!-- Stats Cards -->
     <div class="stats-grid">
-      <div class="stat-card">
+      <a routerLink="/admin/users" class="stat-card clickable">
         <div class="stat-icon">👥</div>
         <div class="stat-info">
           <span class="stat-value">{{ stats()?.totalUsers }}</span>
           <span class="stat-label">Utilisateurs</span>
         </div>
-        <a routerLink="/admin/users" class="stat-link">Voir tout →</a>
-      </div>
+        <span class="stat-link">Voir tout →</span>
+      </a>
 
-      <div class="stat-card">
+      <a routerLink="/admin/questions" class="stat-card clickable">
         <div class="stat-icon">❓</div>
         <div class="stat-info">
           <span class="stat-value">{{ stats()?.totalQuestions }}</span>
           <span class="stat-label">Questions</span>
         </div>
-        <a routerLink="/admin/questions" class="stat-link">Voir tout →</a>
-      </div>
+        <span class="stat-link">Voir tout →</span>
+      </a>
 
-      <div class="stat-card">
+      <a routerLink="/admin/sessions" class="stat-card clickable">
         <div class="stat-icon">📝</div>
         <div class="stat-info">
           <span class="stat-value">{{ stats()?.totalSessions }}</span>
           <span class="stat-label">Sessions Quiz</span>
         </div>
-        <a routerLink="/admin/sessions" class="stat-link">Voir tout →</a>
-      </div>
+        <span class="stat-link">Voir tout →</span>
+      </a>
 
-      <div class="stat-card highlight">
+      <a routerLink="/admin/sessions" class="stat-card highlight clickable">
         <div class="stat-icon">✅</div>
         <div class="stat-info">
           <span class="stat-value">{{ stats()?.completedSessions }}</span>
@@ -50,15 +50,15 @@
         <span class="stat-percentage">
           {{ stats()?.totalSessions ? ((stats()?.completedSessions || 0) / stats()!.totalSessions * 100).toFixed(0) : 0 }}%
         </span>
-      </div>
+      </a>
 
-      <div class="stat-card accent">
+      <a routerLink="/admin/sessions" class="stat-card accent clickable">
         <div class="stat-icon">⭐</div>
         <div class="stat-info">
           <span class="stat-value">{{ stats()?.averageScore?.toFixed(1) || 0 }}%</span>
           <span class="stat-label">Score moyen</span>
         </div>
-      </div>
+      </a>
     </div>
 
     <!-- Recent Activity -->
@@ -97,6 +97,7 @@
                 <span class="session-score" [class.good]="session.percentage >= 70" [class.medium]="session.percentage >= 50 && session.percentage < 70" [class.poor]="session.percentage < 50">
                   {{ session.correct_answers }}/{{ session.total_questions }}
                 </span>
+                <a [routerLink]="['/admin/sessions', session.id]" class="recent-link">Voir</a>
               </li>
             }
           </ul>

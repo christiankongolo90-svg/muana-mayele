@@ -56,3 +56,6 @@ backend/uploads/*.jpg
 # Deploy scripts with credentials
 deploy.py
 deploy_backend.py
+
+.vercel
+.env*
