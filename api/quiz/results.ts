@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (handleCors(req, res)) return;
   if (req.method !== 'GET') return errorResponse(res, 'Method not allowed', 405);
 
-  const sessionId = req.query.session_id;
+  const sessionId = req.query["session_id"];
   if (!sessionId) return errorResponse(res, 'Session ID is required');
 
   try {

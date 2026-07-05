@@ -12,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const pool = getPool();
     if (!(await authenticateAdmin(req, res))) return;
 
-    const id = req.query.id;
+    const id = req.query["id"];
     if (!id) return errorResponse(res, 'Session ID is required');
 
     const sessRes = await pool.query(

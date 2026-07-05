@@ -59,8 +59,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!fileBuffer || !contentId) return errorResponse(res, 'Image and content ID required');
 
     // Upload to Supabase Storage
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env["SUPABASE_URL"];
+    const supabaseKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
 
     if (!supabaseUrl || !supabaseKey) return errorResponse(res, 'Storage not configured', 500);
 

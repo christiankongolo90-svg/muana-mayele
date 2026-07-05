@@ -8,8 +8,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (handleCors(req, res)) return;
   if (req.method !== 'GET') return errorResponse(res, 'Method not allowed', 405);
 
-  const limit = Math.min(Number(req.query.limit) || 10, 100);
-  const userId = req.query.user_id ? Number(req.query.user_id) : null;
+  const limit = Math.min(Number(req.query["limit"]) || 10, 100);
+  const userId = req.query["user_id"] ? Number(req.query["user_id"]) : null;
 
   try {
     const pool = getPool();

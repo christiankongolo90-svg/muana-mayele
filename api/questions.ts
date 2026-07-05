@@ -9,7 +9,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const pool = getPool();
-    const limit = Math.min(Number(req.query.limit) || 20, 100);
+    const limit = Math.min(Number(req.query["limit"]) || 20, 100);
 
     const { rows } = await pool.query(`
       SELECT q.id, q.question, q.options, q.difficulty, c.name as category

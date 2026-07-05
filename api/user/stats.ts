@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (handleCors(req, res)) return;
   if (req.method !== 'GET') return errorResponse(res, 'Method not allowed', 405);
 
-  const userId = Number(req.query.user_id);
+  const userId = Number(req.query["user_id"]);
   if (!userId) return errorResponse(res, 'User ID is required');
 
   try {

@@ -12,9 +12,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const pool = getPool();
     if (!(await authenticateAdmin(req, res))) return;
 
-    const page = Math.max(1, Number(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
-    const search = (req.query.search as string) || '';
+    const page = Math.max(1, Number(req.query["page"]) || 1);
+    const limit = Math.min(100, Math.max(1, Number(req.query["limit"]) || 20));
+    const search = (req.query["search"] as string) || '';
     const offset = (page - 1) * limit;
 
     let where = '';

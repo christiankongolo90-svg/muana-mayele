@@ -1,8 +1,8 @@
 const getConfig = () => ({
-  apiKey: process.env.MUINDA_API_KEY || '',
-  baseUrl: process.env.MUINDA_API_BASE_URL || 'https://api.muindatech.com',
-  template: process.env.MUINDA_OTP_TEMPLATE || 'muinda_login_fr',
-  language: process.env.MUINDA_OTP_LANGUAGE || 'fr',
+  apiKey: process.env["MUINDA_API_KEY"] || '',
+  baseUrl: process.env["MUINDA_API_BASE_URL"] || 'https://api.muindatech.com',
+  template: process.env["MUINDA_OTP_TEMPLATE"] || 'muinda_login_fr',
+  language: process.env["MUINDA_OTP_LANGUAGE"] || 'fr',
 });
 
 function toE164(countryCode: string, phone: string): string {

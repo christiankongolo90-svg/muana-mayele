@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { rows } = await pool.query(
       `SELECT q.*, c.name as category_name FROM questions q
-       JOIN categories c ON q.category_id = c.id WHERE q.id = $1`, [req.query.id]
+       JOIN categories c ON q.category_id = c.id WHERE q.id = $1`, [req.query["id"]]
     );
     if (rows.length === 0) return errorResponse(res, 'Question not found', 404);
 
